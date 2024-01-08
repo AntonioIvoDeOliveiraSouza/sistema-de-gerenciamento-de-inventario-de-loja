@@ -58,7 +58,30 @@ class Produto{
         }
     }
 
+    //Função de venda de produtos
+    public venda(venda:number){
+        if(venda>this._quantidade){
+            console.error("Erro: Venda é superior ao estoque");
+        }else{
+            this._quantidade-=venda;
+            console.log(`Venda realizada com sucesso: Quantidade:${venda} ${this._nome}`);
+            this.setQuantidade(this._quantidade);
+            if(this._quantidade == this._limite){
+                console.log("ATENÇÃO: Quantidade chegou ao limite minimo de estoque, favor reponha");
+            }
+        }
+    }
 
+    //Função de compras do produto
+    public compra(compra:number){
+        if(compra<=0){
+            console.error("Erro: Compra negativa e nula não existe");
+        }else{
+            this._quantidade+=compra;
+            console.log(`Compra realizada com sucesso: Quantidade:${compra} ${this._nome}`);
+            this.setQuantidade(this._quantidade);
+        }
+    }
 }
 
 //Implementação de subclasses
@@ -74,8 +97,9 @@ class Eletrodomesticos extends Produto{
     }   
 }
 
-/*TESTE
-const pc = new Informatica(123, "Positivo", 12);
-pc.setQuantidade(-11);
+
+const pc = new Informatica(123, "PC Positivo", 12,10);
 console.log(pc.getQuantidade());
-*/
+pc.venda(2);//Venda - alerta estoque
+pc.compra(3);//Compra
+
