@@ -3,19 +3,21 @@
 
     *FUNCIONALIDADES A CUMPRIR:
 
-        - Controle de estoque (verificação de estoque após cada operação - imprimir resultados na tela);
-        - Relatório de vendas (opção "show all" - apresentar todos os dados);
-        - Alertas de estoque baixo (após toda venda, checar limite);
+        - Controle de estoque (verificação de estoque após cada operação - imprimir resultados na tela)[100%];
+        - Relatório de vendas (opção "show all" - apresentar todos os dados)[50%];
+        - Alertas de estoque baixo (após toda venda, checar limite)[100%];
 
     *OBRIGATORIEDADE:
         
         - Classe para produtos[FEITO], transações e relatórios
         - Subclasses para diferentes categorias de produtos [FEITO]
         - Diferentes implementações de estoque
-        - Tratamento de casos como falta de estoque ou erros de entrada de dados
+        - Tratamento de casos como falta de estoque ou erros de entrada de dados[50%]
 
     *É Necessário criar o atributo limite e elaborar meio de utilizá-lo
 */
+
+//Criação de Array para gravar todos os registros de venda
 
 //Implementação da classe Produto
 class Produto{
@@ -23,12 +25,15 @@ class Produto{
     protected _nome:string;
     protected _quantidade:number;
     protected _limite:number;
+    protected _preco:number;
+    protected _info:string;
 
-    constructor(codigo:number, nome:string, quantidade:number, limite:number){
+    constructor(codigo:number, nome:string, quantidade:number, limite:number, preco:number){
         this._codigo = codigo;
         this._nome = nome;
         this._quantidade = quantidade;
         this._limite = limite;
+        this._preco = preco;
     }
 
     //Getters da classe Produto
@@ -65,6 +70,7 @@ class Produto{
         }else{
             this._quantidade-=venda;
             console.log(`Venda realizada com sucesso: Quantidade:${venda} ${this._nome}`);
+            this._info += `\nVenda: QUANTIDADE:${venda} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${venda * this._preco}`;
             this.setQuantidade(this._quantidade);
             if(this._quantidade == this._limite){
                 console.log("ATENÇÃO: Quantidade chegou ao limite minimo de estoque, favor reponha");
@@ -79,27 +85,36 @@ class Produto{
         }else{
             this._quantidade+=compra;
             console.log(`Compra realizada com sucesso: Quantidade:${compra} ${this._nome}`);
+            this._info += `\nVenda: QUANTIDADE:${compra} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${compra * this._preco}`;
             this.setQuantidade(this._quantidade);
         }
+    }
+
+    //Função "ToString"
+    public lista(){
+        console.log(this._info);
     }
 }
 
 //Implementação de subclasses
 class Informatica extends Produto{
-    constructor(codigo:number, nome:string, quantidade:number, limite:number){
-        super(codigo,nome,quantidade,limite);
+    constructor(codigo:number, nome:string, quantidade:number, limite:number, preco:number){
+        super(codigo,nome,quantidade,limite,preco);
     } 
 }
 
 class Eletrodomesticos extends Produto{
-    constructor(codigo:number, nome:string, quantidade:number, limite:number){
-        super(codigo,nome,quantidade,limite);
+    constructor(codigo:number, nome:string, quantidade:number, limite:number, preco:number){
+        super(codigo,nome,quantidade,limite,preco);
     }   
 }
 
 
-const pc = new Informatica(123, "PC Positivo", 12,10);
+const geladeira = new Eletrodomesticos(231, "Tramontina", 20,5, 100);
+const pc = new Informatica(123, "PC Positivo", 12,10,20.00);
 console.log(pc.getQuantidade());
+geladeira.compra(1);
+geladeira.venda(5);
 pc.venda(2);//Venda - alerta estoque
 pc.compra(3);//Compra
-
+pc.lista();
