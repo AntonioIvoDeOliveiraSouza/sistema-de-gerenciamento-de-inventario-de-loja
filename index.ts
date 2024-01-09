@@ -1,6 +1,11 @@
 /*
     +Sistema de gerenciamento de inventário de lojas+
 
+    *OBJETIVOS:
+
+        - Otimizar o controle de estoques e vendas na loja [A CONFIRMAR];
+        - Fornecer informações sobre disponibilidades de produtos [FEITO];
+
     *FUNCIONALIDADES A CUMPRIR:
 
         - Controle de estoque (verificação de estoque após cada operação - imprimir resultados na tela)[100%];
@@ -29,6 +34,8 @@ function verLista(){
 
 //Implementação da classe Produto
 class Produto{
+    protected static listaProdutos:Produto[] = [];//Lista para registrar todos os produtos disponíveis e instanciados em um array.
+
     protected _codigo:number; //PK
     protected _nome:string;
     protected _quantidade:number;
@@ -42,6 +49,8 @@ class Produto{
         this._quantidade = quantidade;
         this._limite = limite;
         this._preco = preco;
+
+        Produto.listaProdutos.push(this); //Após cada constructor (instancia), o objeto é registrado no array
     }
 
     //Getters da classe Produto
@@ -79,7 +88,7 @@ class Produto{
             this._quantidade-=venda;
             console.log(`Venda realizada com sucesso: Quantidade:${venda} ${this._nome}`);
             //Inserir informacao da venda em registro de produto
-            this._info += `\nVenda: QUANTIDADE:${venda} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${venda * this._preco}`;
+            this._info += `\nVenda: QUANTIDADE:${venda} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} R$| PREÇO/TOTAL:${venda * this._preco} R$`;
             //Inserir informacao da venda em registro total
             listaCompleta.push(this._info);
             this.setQuantidade(this._quantidade);
@@ -97,7 +106,7 @@ class Produto{
             this._quantidade+=compra;
             console.log(`Compra realizada com sucesso: Quantidade:${compra} ${this._nome}`);
             //Inserir informacao da compra em registro de produto
-            this._info += `\nCompra: QUANTIDADE:${compra} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${compra * this._preco}`;
+            this._info += `\nCompra: QUANTIDADE:${compra} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} R$| PREÇO/TOTAL:${compra * this._preco} R$`;
             //Inserir informacao da compra em registro total
             listaCompleta.push(this._info);
             this.setQuantidade(this._quantidade);
@@ -107,6 +116,16 @@ class Produto{
     //Função "ToString"
     public lista(){
         console.log(this._info);
+    }
+
+    //Função para ver todos os produtos disponíveis
+    public static listaprodutos(){
+        console.log("\nPRATELEIRA DE PRODUTOS:\n");
+        console.log("+============================================================================================================+\n");
+        for(const produto of Produto.listaProdutos){//Imprimir para cada produto a seguinte informação:
+            console.log(`Código: ${produto._codigo} | Produto: ${produto._nome} | Quantidade: ${produto._quantidade} | Preço: ${produto._preco} R$\n`);
+        }
+        console.log("+============================================================================================================+\n");
     }
 }
 
@@ -126,6 +145,8 @@ class Eletrodomesticos extends Produto{
 
 const geladeira = new Eletrodomesticos(231, "Tramontina", 20,5, 100);
 const pc = new Informatica(123, "PC Positivo", 12,10,20.00);
+
+Produto.listaprodutos();
 console.log(pc.getQuantidade());
 geladeira.compra(1);
 pc.compra(3);//Compra
