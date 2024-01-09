@@ -4,7 +4,7 @@
     *FUNCIONALIDADES A CUMPRIR:
 
         - Controle de estoque (verificação de estoque após cada operação - imprimir resultados na tela)[100%];
-        - Relatório de vendas (opção "show all" - apresentar todos os dados)[50%];
+        - Relatório de vendas (opção "show all" - apresentar todos os dados)[100%];
         - Alertas de estoque baixo (após toda venda, checar limite)[100%];
 
     *OBRIGATORIEDADE:
@@ -18,6 +18,14 @@
 */
 
 //Criação de Array para gravar todos os registros de venda
+let listaCompleta: string[] = [];
+
+//Função para ler todos os registros da lista de vendas e compras
+function verLista(){
+    for (let index = 0; index < listaCompleta.length; index++) {
+        console.log(listaCompleta[index]);
+    }
+}
 
 //Implementação da classe Produto
 class Produto{
@@ -26,7 +34,7 @@ class Produto{
     protected _quantidade:number;
     protected _limite:number;
     protected _preco:number;
-    protected _info:string;
+    protected _info:string =  "";
 
     constructor(codigo:number, nome:string, quantidade:number, limite:number, preco:number){
         this._codigo = codigo;
@@ -70,7 +78,10 @@ class Produto{
         }else{
             this._quantidade-=venda;
             console.log(`Venda realizada com sucesso: Quantidade:${venda} ${this._nome}`);
+            //Inserir informacao da venda em registro de produto
             this._info += `\nVenda: QUANTIDADE:${venda} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${venda * this._preco}`;
+            //Inserir informacao da venda em registro total
+            listaCompleta.push(this._info);
             this.setQuantidade(this._quantidade);
             if(this._quantidade == this._limite){
                 console.log("ATENÇÃO: Quantidade chegou ao limite minimo de estoque, favor reponha");
@@ -85,7 +96,10 @@ class Produto{
         }else{
             this._quantidade+=compra;
             console.log(`Compra realizada com sucesso: Quantidade:${compra} ${this._nome}`);
-            this._info += `\nVenda: QUANTIDADE:${compra} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${compra * this._preco}`;
+            //Inserir informacao da compra em registro de produto
+            this._info += `\nCompra: QUANTIDADE:${compra} | PRODUTO:${this._nome} | PREÇO/UNIDADE:${this._preco} | PREÇO/TOTAL:${compra * this._preco}`;
+            //Inserir informacao da compra em registro total
+            listaCompleta.push(this._info);
             this.setQuantidade(this._quantidade);
         }
     }
@@ -114,7 +128,5 @@ const geladeira = new Eletrodomesticos(231, "Tramontina", 20,5, 100);
 const pc = new Informatica(123, "PC Positivo", 12,10,20.00);
 console.log(pc.getQuantidade());
 geladeira.compra(1);
-geladeira.venda(5);
-pc.venda(2);//Venda - alerta estoque
 pc.compra(3);//Compra
-pc.lista();
+verLista();
